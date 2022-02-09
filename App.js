@@ -3,20 +3,27 @@ import {  View, Text, SafeAreaView, StatusBar, TouchableOpacity, FlatList, Modal
 import styles from './style'
 import { Ionicons } from '@expo/vector-icons'
 import TaskList from './src/components/TaskList/'
-import * as Animation from 'react-native-animatable'
+import  *  as  Animatable  from  'react-native-animatable'
 
-const AnimateBtn = Animation.createAnimatableComponent(TouchableOpacity)
+const AnimateBtn = Animatable.createAnimatableComponent(TouchableOpacity)
 
 export default function App() {
-  const [task, setTask] = useState([
-    { key: 1, task: 'comprar pao' },
-    { key: 2, task: 'comprar queijo' },
-    { key: 3, task: 'comprar uva' },
-    { key: 4, task: 'comprar laranja' },
-    { key: 5, task: 'comprar google' }
-  ]);
-
+  const [task, setTask] = useState([]);
   const [open, setOpen] = useState(false);
+  const [input, setInput] = useState('');
+
+  function handleAdd() {
+    if(input === '') return;
+
+    const data = {
+      key: input,
+      task: input
+    };
+
+    setTask([...task, data]);
+    setOpen(false);
+    setInput('');
+  }
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -48,21 +55,23 @@ export default function App() {
               <Text style={styles.modalTitle}> Nova Tarefa </Text>
             </View>
 
-            <View style={styles.modalBody}>
+            <Animatable.View animation="fadeInUp" useNativeDriver style={styles.modalBody}>
               <TextInput
                 multiline={true}
                 placeholderTextColor="#747474"
                 autoCorrect={false}
                 placeholder='O que preciso fazer hoje?'
                 style={styles.modalInput}
+                value={input}
+                onChangeText={(texto) => setInput(texto)}
               />
 
-              <TouchableOpacity style={styles.handleAdd}>
+              <TouchableOpacity style={styles.handleAdd} onPress={handleAdd}>
                 <Text style={styles.handleText}>
                   Cadastrar
                 </Text>
               </TouchableOpacity>
-            </View>
+            </Animatable.View>
 
           </SafeAreaView>
         </Modal>
